@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  zeroclaw:
+    image: ghcr.io/ioleksiy/zeroclaw-docker:latest
+    environment:
+      API_KEY: ${API_KEY}
+      PROVIDER: ${PROVIDER:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      GIT_USER_NAME: ${GIT_USER_NAME}
+      GIT_USER_EMAIL: ${GIT_USER_EMAIL}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      ZEROCLAW_ALLOW_PUBLIC_BIND: ${ZEROCLAW_ALLOW_PUBLIC_BIND:-true}
+      ZEROCLAW_GATEWAY_PORT: ${ZEROCLAW_GATEWAY_PORT:-42617}
+    volumes:
+      - zeroclaw-data:/zeroclaw-data
+      - repos:/repos
+    ports:
+      - ${HOST_PORT:-42617}:42617
+    healthcheck:
+      test: ["CMD", "zeroclaw", "status"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 4G
+        reservations:
+          cpus: "1.0"
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+    networks:
+      - zeroclaw-net
+
+volumes:
+  zeroclaw-data:
+    driver: local
+  repos:
+    driver: local
+
+networks:
+  zeroclaw-net:
+    driver: overlay
