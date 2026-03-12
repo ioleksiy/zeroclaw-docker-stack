@@ -1,6 +1,15 @@
 version: "3.8"
 
 services:
+  init-permissions:
+    image: alpine
+    command: sh -c "chown -R 1000:1000 /zeroclaw-data /repos"
+    volumes:
+      - zeroclaw-data:/zeroclaw-data
+      - repos:/repos
+    deploy:
+      restart_policy:
+        condition: none
   zeroclaw:
     image: ghcr.io/ioleksiy/zeroclaw-docker:latest
     environment:
