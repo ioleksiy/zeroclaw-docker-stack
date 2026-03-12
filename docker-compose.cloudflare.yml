@@ -67,3 +67,4 @@ volumes:
 networks:
   zeroclaw-net:
     driver: overlay
+    attachable: true
