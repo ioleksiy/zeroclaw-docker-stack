@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   zeroclaw:
-    image: ghcr.io/ioleksiy/zeroclaw-docker:latest
+    image: ghcr.io/zeroclaw-labs/zeroclaw:latest
     environment:
       API_KEY: ${API_KEY}
       PROVIDER: ${PROVIDER:-anthropic}
